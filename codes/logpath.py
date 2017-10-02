@@ -1,0 +1,1 @@
+logpath = 'sigmoid+sigmoid.csv'

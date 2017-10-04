@@ -1,1 +1,0 @@
-logpath = 'sigmoid+sigmoid.csv'

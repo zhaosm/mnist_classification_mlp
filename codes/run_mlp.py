@@ -3,20 +3,22 @@ from layers import Relu, Sigmoid, Linear
 from loss import EuclideanLoss  # , SoftmaxCrossEntropyLoss
 from solve_net import train_net, test_net
 from load_data import load_mnist_2d
-from logpath import logpath
 import csv
 from datetime import datetime
 
 
+logpath = 'relu(1hiddenlayer).csv'
 train_data, test_data, train_label, test_label = load_mnist_2d('data')
 
 # Your model defintion here
 # You should explore different model architecture
 model = Network()
 model.add(Linear('fc1', 784, 81, 0.01))
-model.add(Sigmoid('sigmoid'))
+model.add(Relu('relu'))
 model.add(Linear('fc2', 81, 10, 0.01))
-model.add(Sigmoid('sigmoid'))
+model.add(Relu('relu'))
+# model.add(Linear('fc3', 27, 10, 0.01))
+# model.add(Relu('relu'))
 
 loss = EuclideanLoss(name='loss')
 
@@ -29,7 +31,7 @@ loss = EuclideanLoss(name='loss')
 config = {
     'learning_rate': 0.01,
     'weight_decay': 0.0,
-    'momentum': 0.5,
+    'momentum': 0.9,
     'batch_size': 100,
     'max_epoch': 300,
     'disp_freq': 50,
@@ -39,11 +41,11 @@ config = {
 start = datetime.now()
 display_start = str(start).split(' ')[1][:-3]
 log_list = []
+current_iter_count = 0
 for epoch in range(config['max_epoch']):
-    loss_value = train_net(model, loss, config, train_data, train_label, config['batch_size'], config['disp_freq'])
-    log_list.append({'epoch': epoch, 'loss': loss_value})
-
-    if epoch == config['max_epoch'] - 1:
+    current_iter_count, loss_values = train_net(model, loss, config, train_data, train_label, config['batch_size'], config['disp_freq'], current_iter_count)
+    log_list = log_list + loss_values
+    if epoch == config['max_epoch'] - 1:  # test after training
         acc_value = test_net(model, loss, test_data, test_label, config['batch_size'])
 
 now = datetime.now()

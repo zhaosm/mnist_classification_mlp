@@ -12,9 +12,11 @@ def data_iterator(x, y, batch_size, shuffle=True):
         yield x[indx[start_idx: end_idx]], y[indx[start_idx: end_idx]]
 
 
-def train_net(model, loss, config, inputs, labels, batch_size, disp_freq):
+def train_net(model, loss, config, inputs, labels, batch_size, disp_freq, current_iter_count):
 
     iter_counter = 0
+    loss_value = 0
+    loss_values = []
 
     for input, label in data_iterator(inputs, labels, batch_size):
         target = onehot_encoding(label, 10)
@@ -23,7 +25,7 @@ def train_net(model, loss, config, inputs, labels, batch_size, disp_freq):
         # forward net
         output = model.forward(input)
         # calculate loss
-        loss_value = loss.forward(output, target)
+        loss_value += loss.forward(output, target)
         # generate gradient w.r.t loss
         grad = loss.backward(output, target)
         # backward gradient
@@ -31,7 +33,12 @@ def train_net(model, loss, config, inputs, labels, batch_size, disp_freq):
         model.backward(grad)
         # update layers' weights
         model.update(config)
-    return loss_value
+
+        if iter_counter % disp_freq == 0:
+            loss_values.append({'iter': current_iter_count + iter_counter, 'loss': loss_value / disp_freq})
+            loss_value = 0
+    current_iter_count += iter_counter
+    return current_iter_count, loss_values
 
 
 def test_net(model, loss, inputs, labels, batch_size):

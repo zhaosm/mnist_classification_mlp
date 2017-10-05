@@ -7,7 +7,7 @@ import csv
 from datetime import datetime
 
 
-logpath = 'relu(1hiddenlayer).csv'
+logpath = 'relu(2hiddenlayers).csv'
 train_data, test_data, train_label, test_label = load_mnist_2d('data')
 
 # Your model defintion here
@@ -15,10 +15,10 @@ train_data, test_data, train_label, test_label = load_mnist_2d('data')
 model = Network()
 model.add(Linear('fc1', 784, 81, 0.01))
 model.add(Relu('relu'))
-model.add(Linear('fc2', 81, 10, 0.01))
+model.add(Linear('fc2', 81, 27, 0.01))
 model.add(Relu('relu'))
-# model.add(Linear('fc3', 27, 10, 0.01))
-# model.add(Relu('relu'))
+model.add(Linear('fc3', 27, 10, 0.01))
+model.add(Relu('relu'))
 
 loss = EuclideanLoss(name='loss')
 
@@ -33,7 +33,7 @@ config = {
     'weight_decay': 0.0,
     'momentum': 0.9,
     'batch_size': 100,
-    'max_epoch': 300,
+    'max_epoch': 350,
     'disp_freq': 50,
     'test_epoch': 5
 }
@@ -52,7 +52,8 @@ now = datetime.now()
 display_now = str(now).split(' ')[1][:-3]
 logfile = file(logpath, 'wb')
 writer = csv.writer(logfile)
-data = [(log['epoch'], log['loss']) for log in log_list]
+writer.writerow(['iter', 'loss'])
+data = [(log['iter'], log['loss']) for log in log_list]
 writer.writerows(data)
 data = [(display_start, ), (display_now, ), (acc_value, )]
 writer.writerows(data)

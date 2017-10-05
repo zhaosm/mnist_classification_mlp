@@ -2,7 +2,6 @@ from __future__ import division
 from __future__ import print_function
 import numpy as np
 from datetime import datetime
-logpath = 'fc1+sigmoid.csv'
 
 
 def onehot_encoding(label, max_num_class):

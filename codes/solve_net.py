@@ -43,7 +43,10 @@ def train_net(model, loss, config, inputs, labels, batch_size, disp_freq, curren
 
 def test_net(model, loss, inputs, labels, batch_size):
 
+    acc_value = 0.0
+    count = 0
     for input, label in data_iterator(inputs, labels, batch_size, shuffle=False):
         output = model.forward(input)
-        acc_value = calculate_acc(output, label)
-    return acc_value
+        acc_value += calculate_acc(output, label)
+        count += 1
+    return acc_value / count

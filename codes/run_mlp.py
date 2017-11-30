@@ -1,13 +1,13 @@
 from network import Network
 from layers import Relu, Sigmoid, Linear
-from loss import EuclideanLoss  # , SoftmaxCrossEntropyLoss
+from loss import EuclideanLoss, SoftmaxCrossEntropyLoss
 from solve_net import train_net, test_net
 from load_data import load_mnist_2d
 import csv
 from datetime import datetime
 
 
-logpath = 'relu(2hiddenlayers).csv'
+logpath = '1linear.csv'
 train_data, test_data, train_label, test_label = load_mnist_2d('data')
 
 # Your model defintion here
@@ -18,9 +18,8 @@ model.add(Relu('relu'))
 model.add(Linear('fc2', 81, 27, 0.01))
 model.add(Relu('relu'))
 model.add(Linear('fc3', 27, 10, 0.01))
-model.add(Relu('relu'))
 
-loss = EuclideanLoss(name='loss')
+loss = SoftmaxCrossEntropyLoss(name='loss')
 
 # Training configuration
 # You should adjust these hyperparameters
@@ -33,8 +32,8 @@ config = {
     'weight_decay': 0.0,
     'momentum': 0.9,
     'batch_size': 100,
-    'max_epoch': 350,
-    'disp_freq': 50,
+    'max_epoch': 100,
+    'disp_freq': 5,
     'test_epoch': 5
 }
 
